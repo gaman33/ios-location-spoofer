@@ -1,6 +1,6 @@
 # iOS Location Spoofer
 
-自建了worker网页，选点页也在里面：https://cyberhandyman-ioslocspo.cyberhandyman.workers.dev
+自建了worker网页，选点页也在里面：https://ios-location-picker.lxfii33.workers.dev
 
 视频教程：https://youtu.be/EspuRlKWUxc
 
@@ -20,7 +20,7 @@
 不想用我的网址、或者想自己掌控？点下面的按钮，登录 Cloudflare 后一路下一步，
 **30 秒**就能部署一份**属于你自己的**选点页（Cloudflare 免费额度完全够用）：
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cyberhandyman/ios-location-spoofer/tree/main/stateless-picker/worker)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/gaman33/ios-location-spoofer/tree/main/stateless-picker/worker)
 
 部署完你会拿到一个自己的网址（形如 `https://xxx.你的账号.workers.dev`）。
 它自带全部模块文件，主页里的「一键导入」按钮会**自动指向你自己的域名**，不用改任何代码。
@@ -46,14 +46,14 @@
 
 ## 📦 模块安装地址
 
-推荐直接在[选点页首页](https://cyberhandyman-ioslocspo.cyberhandyman.workers.dev)点「一键导入」。手动添加用下面的地址：
+推荐直接在[选点页首页](https://ios-location-picker.lxfii33.workers.dev)点「一键导入」。手动添加用下面的地址：
 
 | 客户端 | 模块地址 |
 |---|---|
-| Shadowrocket / Surge / Egern | `https://raw.githubusercontent.com/cyberhandyman/ios-location-spoofer/main/ios-location-spoofer.sgmodule` |
-| Loon | `https://raw.githubusercontent.com/cyberhandyman/ios-location-spoofer/main/ios-location-spoofer.lnplugin` |
-| Stash | `https://raw.githubusercontent.com/cyberhandyman/ios-location-spoofer/main/ios-location-spoofer.stoverride` |
-| Quantumult X | `https://raw.githubusercontent.com/cyberhandyman/ios-location-spoofer/main/ios-location-spoofer.snippet` |
+| Shadowrocket / Surge / Egern | `https://raw.githubusercontent.com/gaman33/ios-location-spoofer/main/ios-location-spoofer.sgmodule` |
+| Loon | `https://raw.githubusercontent.com/gaman33/ios-location-spoofer/main/ios-location-spoofer.lnplugin` |
+| Stash | `https://raw.githubusercontent.com/gaman33/ios-location-spoofer/main/ios-location-spoofer.stoverride` |
+| Quantumult X | `https://raw.githubusercontent.com/gaman33/ios-location-spoofer/main/ios-location-spoofer.snippet` |
 
 **MITM 主机名**（如全部配置成功仍不生效，手动加入这四个域名）：
 
@@ -89,3 +89,5 @@ iPhone 靠周围 Wi-Fi、基站的 BSSID 去问 Apple「这些设备在哪」，
 5. 下载、安装或使用本项目，即视为你已阅读并同意本声明；如不同意，请立即停止使用。
 
 许可证：**GNU AGPL-3.0**（继承自上游项目）
+
+
