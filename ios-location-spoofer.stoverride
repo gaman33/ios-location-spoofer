@@ -6,8 +6,10 @@ http:
   mitm:
     - "gs-loc.apple.com"
     - "gs-loc-cn.apple.com"
+    - "bluedot.is.autonavi.com"
+    - "bluedot.is.autonavi.com.gds.alibabadns.com"
   script:
-    - match: ^https?:\/\/gs-loc(-cn)?\.apple\.com\/clls\/wloc
+    - match: ^https?:\/\/(?:gs-loc(-cn)?\.apple\.com|bluedot\.is\.autonavi\.com(?:\.gds\.alibabadns\.com)?)\/clls\/wloc
       name: ios-location-spoofer
       type: response
       require-body: true
@@ -15,7 +17,7 @@ http:
       max-size: 0
       timeout: 30
       argument: mode=response&debug=false
-    - match: ^https?:\/\/gs-loc(-cn)?\.apple\.com\/ils-settings\/
+    - match: ^https?:\/\/gs-loc(?:-cn)?\.apple\.com\/ils-settings\/
       name: ios-location-settings
       type: request
       require-body: false
@@ -28,4 +30,3 @@ script-providers:
   ios-location-settings:
     url: https://raw.githubusercontent.com/gaman33/ios-location-spoofer/main/location-settings.js
     interval: 86400
-
