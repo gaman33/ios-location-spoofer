@@ -454,6 +454,10 @@
     cfg.failOpen = parseBoolean(cfg.failOpen, true);
     var mode = String(cfg.mode || "response").toLowerCase();
     cfg.mode = mode === "request" || mode === "prepare" || mode === "probe" || mode === "inspect" ? mode : "response";
+    if (cfg.latitude == null || cfg.longitude == null ||
+        String(cfg.latitude).trim() === "" || String(cfg.longitude).trim() === "") {
+      throw new Error("missing coordinates");
+    }
     cfg.latitude = Number(cfg.latitude);
     cfg.longitude = Number(cfg.longitude);
     cfg.horizontalAccuracy = Math.trunc(Number(cfg.horizontalAccuracy));
@@ -475,6 +479,13 @@
     }
     if (!Number.isFinite(cfg.longitude) || cfg.longitude < -180 || cfg.longitude > 180) {
       throw new Error("invalid longitude");
+    }
+    if (!Number.isSafeInteger(cfg.altitude)) {
+      throw new Error("invalid altitude");
+    }
+    if (!Number.isSafeInteger(cfg.horizontalAccuracy) || cfg.horizontalAccuracy < 0 ||
+        !Number.isSafeInteger(cfg.verticalAccuracy) || cfg.verticalAccuracy < 0) {
+      throw new Error("invalid accuracy");
     }
     return cfg;
   }
@@ -906,10 +917,6 @@
       "altitude",
       "horizontalAccuracy",
       "verticalAccuracy",
-      "address",
-      "configHost",
-      "configToken",
-      "configUrl",
       "debug"
     ];
     var i;
@@ -1282,7 +1289,11 @@
 
   function loadRuntimeConfigSync() {
     var args = readScriptArguments();
-    var cfg = mergeConfig(DEFAULT_CONFIG, configFromArgs(args));
+    var supplied = configFromArgs(args);
+    var cfg = mergeConfig(DEFAULT_CONFIG, supplied);
+    // Stateless use must never enable the built-in demonstration coordinates.
+    if (!Object.prototype.hasOwnProperty.call(supplied, "latitude")) cfg.latitude = NaN;
+    if (!Object.prototype.hasOwnProperty.call(supplied, "longitude")) cfg.longitude = NaN;
     var configUrl = resolveConfigUrl(args);
     var debug = parseBoolean(cfg.debug, false);
     var address = String(args.address || "").trim();
@@ -1308,29 +1319,37 @@
   }
 
   function loadRuntimeConfig(callback) {
-    var loaded = loadRuntimeConfigSync();
+    var loaded;
+    try {
+      loaded = loadRuntimeConfigSync();
+    } catch (err) {
+      callback({ enabled: false });
+      return;
+    }
     var cfg = loaded.cfg;
     var configUrl = loaded.configUrl;
     var debug = loaded.debug;
 
     function finish() {
-      try {
-        callback(normalizeConfig(cfg));
-      } catch (err) {
-        if (debug) {
-          console.log("Location spoofer config invalid: " + err.message + " | cfg lat/lng=" + cfg.latitude + "," + cfg.longitude);
-        }
-        if (!Number.isFinite(Number(cfg.latitude)) || !Number.isFinite(Number(cfg.longitude))) {
-          cfg.latitude = DEFAULT_CONFIG.latitude;
-          cfg.longitude = DEFAULT_CONFIG.longitude;
-        }
-        callback(normalizeConfig(cfg));
+      if (!parseBoolean(cfg.enabled, false)) {
+        callback({ enabled: false });
+        return;
       }
+      var normalized;
+      try {
+        normalized = normalizeConfig(cfg);
+      } catch (err) {
+        if (debug) console.log("Location spoofer invalid config; passing through: " + err.message);
+        callback({ enabled: false });
+        return;
+      }
+      // Keep the callback outside the validation catch: it must run only once.
+      callback(normalized);
     }
 
     logScriptArguments(debug);
 
-    if (!configUrl) {
+    if (!parseBoolean(cfg.enabled, false) || !configUrl) {
       finish();
       return;
     }
